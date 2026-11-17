@@ -10,6 +10,13 @@ import type { LinkItem, Profile, PublicPage } from "./types";
 
 const USERNAME_RE = /^[a-z0-9_-]{3,20}$/; // PRD F-01-5
 
+/** 서비스 화면 경로와 겹쳐 사용자명으로 쓸 수 없는 예약어 (PRD 10. 미결 사항) */
+export const RESERVED_USERNAMES = new Set([
+  "admin", "login", "logout", "signup", "register", "dashboard", "settings",
+  "account", "api", "app", "r", "help", "about", "terms", "privacy",
+  "static", "public", "assets", "linknamu",
+]);
+
 function toProfile(u: UserDoc): Profile {
   return {
     id: u._id.toHexString(),
@@ -37,7 +44,7 @@ function toLinkItem(l: LinkDoc): LinkItem {
 export const getPublicPage = cache(
   async (username: string): Promise<PublicPage | null> => {
     const name = username.toLowerCase();
-    if (!USERNAME_RE.test(name)) return null;
+    if (!USERNAME_RE.test(name) || RESERVED_USERNAMES.has(name)) return null;
 
     if (useDevFallback) {
       return name === devDemoPage.profile.username ? devDemoPage : null;
