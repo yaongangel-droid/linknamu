@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { inspect } from "@/lib/dev-inspect";
 
 export default function Hero() {
   return (
-    <section className="flex w-full max-w-md flex-col items-center gap-6 px-4 text-center">
+    <section
+      {...inspect("Hero (랜딩 첫 화면)", "src/components/Hero.tsx")}
+      className="flex w-full max-w-md flex-col items-center gap-6 px-4 text-center"
+    >
       <span className="text-5xl" aria-hidden="true">
         🌳
       </span>

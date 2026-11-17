@@ -2,6 +2,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { cache } from "react";
 import { ObjectId } from "mongodb";
+import { devDemoPage, useDevFallback } from "./dev-fallback";
 import { collections, type LinkDoc, type UserDoc } from "./mongodb";
 import type { LinkItem, Profile, PublicPage } from "./types";
 
@@ -27,6 +28,7 @@ function toLinkItem(l: LinkDoc): LinkItem {
     url: l.url,
     position: l.position,
     isVisible: l.isVisible,
+    isFeatured: l.isFeatured ?? false,
     clickCount: l.clickCount,
   };
 }
@@ -36,6 +38,10 @@ export const getPublicPage = cache(
   async (username: string): Promise<PublicPage | null> => {
     const name = username.toLowerCase();
     if (!USERNAME_RE.test(name)) return null;
+
+    if (useDevFallback) {
+      return name === devDemoPage.profile.username ? devDemoPage : null;
+    }
 
     const { users, links } = await collections();
     const user = await users.findOne({ username: name });
@@ -58,6 +64,9 @@ export const getPublicPage = cache(
 
 /** 리디렉션용: 공개 링크 하나를 반환 */
 export async function getVisibleLink(linkId: string): Promise<LinkItem | null> {
+  if (useDevFallback) {
+    return devDemoPage.links.find((l) => l.id === linkId) ?? null;
+  }
   if (!ObjectId.isValid(linkId) || linkId.length !== 24) return null;
   const { links } = await collections();
   const link = await links.findOne({
@@ -81,7 +90,7 @@ export async function recordClick(
   linkId: string,
   visitor: { ip: string; userAgent: string },
 ): Promise<void> {
-  if (BOT_UA_RE.test(visitor.userAgent)) return;
+  if (useDevFallback || BOT_UA_RE.test(visitor.userAgent)) return;
 
   const { links, clickDedupe } = await collections();
   const key = createHash("sha256")

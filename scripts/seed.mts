@@ -35,7 +35,7 @@ try {
     username: "demo",
     displayName: "홍길동",
     bio: "프론트엔드 개발자 · 블로거",
-    avatarUrl: null,
+    avatarUrl: "/profile.jpg",
     createdAt: now,
     updatedAt: now,
   });
@@ -55,6 +55,7 @@ try {
       url,
       position,
       isVisible,
+      isFeatured: title === "포트폴리오",
       clickCount: 0,
       createdAt: now,
       updatedAt: now,

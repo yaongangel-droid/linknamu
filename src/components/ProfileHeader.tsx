@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { inspect } from "@/lib/dev-inspect";
 import type { Profile } from "@/lib/types";
 
 export default function ProfileHeader({ profile }: { profile: Profile }) {
@@ -6,7 +7,10 @@ export default function ProfileHeader({ profile }: { profile: Profile }) {
   const initial = Array.from(displayName.trim())[0] ?? "?";
 
   return (
-    <header className="flex flex-col items-center gap-3 text-center">
+    <header
+      {...inspect("ProfileHeader (프로필)", "src/components/ProfileHeader.tsx")}
+      className="flex flex-col items-center gap-3 text-center"
+    >
       {avatarUrl ? (
         <Image
           src={avatarUrl}

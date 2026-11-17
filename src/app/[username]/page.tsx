@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import LinkCard from "@/components/LinkCard";
 import ProfileHeader from "@/components/ProfileHeader";
 import { getPublicPage } from "@/lib/data";
+import { inspect } from "@/lib/dev-inspect";
 
 // 방문자는 대부분 SNS에서 바로 들어오므로, 데이터를 다 읽은 뒤 한 번에 그립니다.
 // (없는 사용자명에 404 상태 코드를 정확히 돌려주고, OG 메타 태그도 함께 내려보냄)
@@ -44,7 +45,10 @@ export default async function PublicLinkPage({
         <ProfileHeader profile={page.profile} />
 
         {page.links.length > 0 ? (
-          <ul className="flex w-full flex-col gap-3">
+          <ul
+            {...inspect("링크 목록", "src/app/[username]/page.tsx")}
+            className="flex w-full flex-col gap-3"
+          >
             {page.links.map((link) => (
               <li key={link.id}>
                 <LinkCard link={link} />
@@ -55,7 +59,10 @@ export default async function PublicLinkPage({
           <p className="text-sm text-zinc-500">아직 등록된 링크가 없어요.</p>
         )}
 
-        <footer className="mt-auto pt-6 text-xs text-zinc-400">
+        <footer
+          {...inspect("푸터 (made with 링크나무)", "src/app/[username]/page.tsx")}
+          className="mt-auto pt-6 text-xs text-zinc-400"
+        >
           made with{" "}
           <Link href="/" className="font-semibold text-emerald-600 hover:underline">
             링크나무

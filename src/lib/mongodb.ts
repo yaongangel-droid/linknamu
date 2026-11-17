@@ -20,6 +20,7 @@ export interface LinkDoc {
   url: string;
   position: number;
   isVisible: boolean;
+  isFeatured?: boolean;
   clickCount: number;
   createdAt: Date;
   updatedAt: Date;
